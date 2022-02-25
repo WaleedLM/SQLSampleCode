@@ -1,0 +1,61 @@
+*Waleed Masoud - Sample SQL code - using Base SAS 9.4;
+*Creating new table called research1 that has column attributes: total, grade, race;
+
+proc sql;
+create table research1
+	(
+		total num,
+		grade char(25) ,
+		race char(25)
+	);
+quit;
+
+*Adding in data points into the new table (research1);
+
+proc sql;
+insert into research1
+	set total = 30,
+		grade = 'Freshman',
+		Race = 'Caucasian'
+	set total = 32,
+		grade = 'Sophomore',
+		Race = 'Hispanic';
+quit;
+
+*Using a dataset titled "Research" Which contains data from high school students that took a pre-test and a post-test;
+*Using dataset "Research", looking at the average test scores of the students pre-tests and post-tests and comparing them by grade;
+
+proc sql;
+title "Test Scores from Pre to Post";
+select grade, avg(total) as Pretest_Total
+from research
+group by grade;
+select grade, avg(total) as Posttest_Total
+from researchpost
+group by grade;
+quit;
+
+*Looking at specifically, Freshman and Sophomore students test scores;
+proc sql;
+select grade, avg(total) as Pretest_Total
+from research
+group by grade
+having grade = "Freshman" or grade =  "Sophomore";
+select grade, avg(total) as Posttest_Total
+from researchpost
+group by grade
+having grade = "Freshman" or grade =  "Sophomore";
+quit;
+
+*Looking at dataset "patientrpt", choosing which variables I want from the dataset and making a legible report for the patient, specifically in-patients;
+proc sql;
+title "Patient Claims Report";
+select 
+	clnum label = "Claim Number", 
+	name,
+	Pssn  label = "Patient SSN", /*need to format for full number*/
+	clamount label = "Claim Amount",
+	paidamount label = "Paid Amount"
+	from patientrpt
+	where Type = "in";
+quit;
